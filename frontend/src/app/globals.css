@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-pink: #FF6EC7;
+  --color-brand-lavender: #B388FF;
+  --color-brand-sky: #6EC6FF;
+  --color-brand-baby: #A7D8FF;
+  --color-brand-mint: #7EF2C6;
+  
+  --color-sec-peach: #FFD6A5;
+  --color-sec-coral: #FF9A8B;
+  --color-sec-lilac: #DCC6FF;
+  --color-sec-aqua: #B8FFF9;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-cloud-drift: cloud-drift 60s linear infinite;
+  --animate-butterfly-flap: flap 0.2s ease-in-out infinite alternate;
+}
+
+:root {
+  --background-gradient: linear-gradient(135deg, #FFF0F5 0%, #E6E6FA 40%, #E0F7FA 100%);
+  --text-primary: #333333;
+  --text-secondary: #5A5A5A;
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-shadow: 0 8px 32px 0 rgba(179, 136, 255, 0.15);
+}
+
+body {
+  background: var(--background-gradient);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(179, 136, 255, 0.4);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 110, 199, 0.6);
+}
+
+/* Glassmorphism Panel Utility */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 24px;
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-panel-hover:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(255, 110, 199, 0.2);
+  border-color: rgba(255, 110, 199, 0.4);
+}
+
+/* Leaflet Map Pastel Filter */
+.pastel-map {
+  filter: sepia(10%) hue-rotate(190deg) saturate(110%) brightness(102%) contrast(98%);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* Keyframe Animations */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes cloud-drift {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100vw); }
+}
+
+@keyframes flap {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(65deg); }
+}
+
+/* Particle Styles */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(179,136,255,0.2) 70%, rgba(255,255,255,0) 100%);
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+}
