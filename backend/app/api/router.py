@@ -1,8 +1,10 @@
 from fastapi import APIRouter
-from app.api.endpoints import places, cv, scoring
+from app.api.endpoints import places, cv, scoring, reviews, reports
 
 api_router = APIRouter()
 
 api_router.include_router(places.router, prefix="/places", tags=["places"])
 api_router.include_router(cv.router, prefix="/cv", tags=["cv"])
 api_router.include_router(scoring.router, prefix="/scoring", tags=["scoring"])
+api_router.include_router(reviews.router, prefix="/reviews", tags=["reviews"])
+api_router.include_router(reports.router, prefix="/reports", tags=["reports"])

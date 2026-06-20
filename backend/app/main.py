@@ -2,6 +2,11 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.router import api_router
+from app.database.connection import Base, engine
+import app.models # Register all models
+
+# Auto-initialize database tables on server startup
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Accessible AI Backend API",
