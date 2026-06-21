@@ -377,23 +377,90 @@ const MapFlyController: React.FC<{ selectedLoc: MapLocation | null }> = ({ selec
   return null;
 };
 
-export const AccessibilityMap: React.FC = () => {
+interface AccessibilityMapProps {
+  refreshTrigger?: number;
+}
+
+export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigger = 0 }) => {
   const { calculateScore, activeProfile } = usePassport();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLoc, setSelectedLoc] = useState<MapLocation | null>(MOCK_LOCATIONS[0]);
+  const [locations, setLocations] = useState<MapLocation[]>(MOCK_LOCATIONS);
+  const [selectedLoc, setSelectedLoc] = useState<MapLocation | null>(null);
   const [filteredLocations, setFilteredLocations] = useState<MapLocation[]>(MOCK_LOCATIONS);
   const [activeRouteTab, setActiveRouteTab] = useState<'shortest' | 'accessible'>('accessible');
+
+  useEffect(() => {
+    async function loadPlaces() {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+        const res = await fetch(`${apiUrl}/places/`);
+        if (res.ok) {
+          const dbPlaces = await res.json();
+          // Merge database features with our mock locations images/routes
+          const merged = MOCK_LOCATIONS.map(mock => {
+            const dbMatch = dbPlaces.find((p: any) => p.name.toLowerCase() === mock.name.toLowerCase());
+            if (dbMatch) {
+              return {
+                ...mock,
+                id: dbMatch.id.toString(),
+                features: {
+                  has_ramp: dbMatch.has_ramp,
+                  has_elevator: dbMatch.has_elevator,
+                  has_handrail: dbMatch.has_handrail,
+                  has_accessible_washroom: dbMatch.has_accessible_washroom,
+                  has_nursing_room: dbMatch.has_nursing_room,
+                  has_step_free_entrance: dbMatch.has_step_free_entrance,
+                  stair_count: dbMatch.stair_count,
+                  has_seating: dbMatch.has_seating,
+                  has_parking: dbMatch.has_parking,
+                  is_verified: dbMatch.is_verified,
+                }
+              };
+            }
+            return mock;
+          });
+          setLocations(merged);
+          
+          // Re-apply search filter or set all
+          const query = searchQuery.toLowerCase().trim();
+          if (query === '') {
+            setFilteredLocations(merged);
+          } else {
+            const filtered = merged.filter(
+              loc =>
+                loc.name.toLowerCase().includes(query) ||
+                loc.category.toLowerCase().includes(query) ||
+                loc.address.toLowerCase().includes(query)
+            );
+            setFilteredLocations(filtered);
+          }
+          
+          // Sync selected location details
+          setSelectedLoc(prevSelected => {
+            if (prevSelected) {
+              const updated = merged.find(l => l.id === prevSelected.id);
+              return updated || merged[0];
+            }
+            return merged[0];
+          });
+        }
+      } catch (err) {
+        console.warn('Backend offline, using local mock locations.', err);
+      }
+    }
+    loadPlaces();
+  }, [refreshTrigger, calculateScore]);
 
   // Filter locations on search query
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const query = searchQuery.toLowerCase().trim();
     if (query === '') {
-      setFilteredLocations(MOCK_LOCATIONS);
+      setFilteredLocations(locations);
       return;
     }
 
-    const filtered = MOCK_LOCATIONS.filter(
+    const filtered = locations.filter(
       loc =>
         loc.name.toLowerCase().includes(query) ||
         loc.category.toLowerCase().includes(query) ||
@@ -475,7 +542,7 @@ export const AccessibilityMap: React.FC = () => {
               key={cat}
               onClick={() => {
                 setSearchQuery(cat);
-                const filtered = MOCK_LOCATIONS.filter(loc => loc.category === cat);
+                const filtered = locations.filter(loc => loc.category === cat);
                 setFilteredLocations(filtered);
                 if (filtered.length > 0) setSelectedLoc(filtered[0]);
               }}

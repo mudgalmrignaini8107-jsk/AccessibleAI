@@ -5,17 +5,22 @@ import React, { useState, useRef } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { uploadToVisionAI } from '@/utils/api';
+import { uploadToVisionAI, uploadPlaceVerification } from '@/utils/api';
 import { Upload, Eye, ShieldCheck, RefreshCw, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const VisionScanner: React.FC = () => {
+interface VisionScannerProps {
+  onScanComplete?: () => void;
+}
+
+export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) => {
   const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [annotatedImage, setAnnotatedImage] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [detections, setDetections] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState<string>('generic');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,11 +44,21 @@ export const VisionScanner: React.FC = () => {
     setError(null);
 
     try {
-      // Post request to backend CV Endpoint
-      const data = await uploadToVisionAI(file);
+      let data;
+      if (selectedPlaceId === 'generic') {
+        data = await uploadToVisionAI(file);
+      } else {
+        data = await uploadPlaceVerification(Number(selectedPlaceId), file);
+      }
+      
       if (data.success) {
         setAnnotatedImage(data.annotated_image);
         setDetections(data.detections);
+        
+        // Trigger page counters and map refresh
+        if (onScanComplete) {
+          onScanComplete();
+        }
       } else {
         throw new Error(data.error || 'Failed to parse image');
       }
@@ -62,6 +77,11 @@ export const VisionScanner: React.FC = () => {
       
       // Use original preview for demo fallback overlay
       setAnnotatedImage(imagePreview);
+
+      // Trigger stats refresh in simulation as well
+      if (onScanComplete) {
+        onScanComplete();
+      }
     } finally {
       setIsScanning(false);
     }
@@ -73,6 +93,7 @@ export const VisionScanner: React.FC = () => {
     setAnnotatedImage(null);
     setDetections([]);
     setError(null);
+    setSelectedPlaceId('generic');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
@@ -178,6 +199,27 @@ export const VisionScanner: React.FC = () => {
             <p className="text-xs text-slate-600 font-semibold leading-relaxed">
               Upload any facade or entryway image. Our Computer Vision pipeline runs contour geometry maps and color thresholding checks to detect ramps, entrances, stairs, and handrails.
             </p>
+          </div>
+
+          {/* Target Place Selector */}
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider block">
+              Audit Destination Link
+            </label>
+            <select
+              value={selectedPlaceId}
+              onChange={(e) => setSelectedPlaceId(e.target.value)}
+              disabled={isScanning}
+              className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-md text-xs font-bold text-slate-855 focus:outline-none focus:ring-2 focus:ring-brand-mint/40 transition-all cursor-pointer"
+            >
+              <option value="generic">📁 Generic Sandbox Auditor (Sandbox)</option>
+              <option value="1">☕ Sweet Pastel Cafe (Verify & Sync)</option>
+              <option value="2">🏥 Manhattan General Hospital (Verify & Sync)</option>
+              <option value="3">🌳 Greenwood Park Oasis (Verify & Sync)</option>
+              <option value="4">🎓 Downtown Arts College (Verify & Sync)</option>
+              <option value="5">🚉 Grand Central Station Hub (Verify & Sync)</option>
+              <option value="6">🛍️ Broadway Shopping Mall (Verify & Sync)</option>
+            </select>
           </div>
 
           {/* Action buttons */}

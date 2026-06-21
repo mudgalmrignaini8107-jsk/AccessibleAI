@@ -69,7 +69,7 @@ async def create_accessibility_report(
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to save report: {str(e)}")
 
-@router.post("/place/{place_id}/verify", response_model=VerificationResponseSchema)
+@router.post("/place/{place_id}/verify")
 async def verify_place_accessibility(
     place_id: int,
     file: UploadFile = File(...),
@@ -138,7 +138,24 @@ async def verify_place_accessibility(
         db.add(v_report)
         db.commit()
         db.refresh(v_report)
-        return v_report
+        
+        return {
+            "success": True,
+            "detections": detections,
+            "annotated_image": cv_result.get("annotated_image"),
+            "report": {
+                "id": v_report.id,
+                "place_id": v_report.place_id,
+                "inspector": v_report.inspector,
+                "image_url": v_report.image_url,
+                "ramp_detected": v_report.ramp_detected,
+                "stairs_detected": v_report.stairs_detected,
+                "handrail_detected": v_report.handrail_detected,
+                "elevator_detected": v_report.elevator_detected,
+                "confidence_score": v_report.confidence_score,
+                "is_approved": v_report.is_approved
+            }
+        }
 
     except Exception as e:
         db.rollback()

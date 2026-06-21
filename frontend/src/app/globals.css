@@ -20,22 +20,30 @@
 }
 
 :root {
-  --background-gradient: linear-gradient(135deg, #FFF0F5 0%, #E6E6FA 40%, #E0F7FA 100%);
-  --text-primary: #333333;
-  --text-secondary: #5A5A5A;
-  --glass-bg: rgba(255, 255, 255, 0.45);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --glass-shadow: 0 8px 32px 0 rgba(179, 136, 255, 0.15);
+  --background-gradient: linear-gradient(135deg, #FFF5F7 0%, #F5F0FF 50%, #F0F8FF 100%);
+  --text-primary: #1e1b4b; /* Deep indigo for high contrast readability */
+  --text-secondary: #475569;
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.8);
+  --glass-shadow: 0 12px 40px 0 rgba(179, 136, 255, 0.1);
 }
 
 body {
   background: var(--background-gradient);
   background-attachment: fixed;
   color: var(--text-primary);
-  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-outfit), var(--font-inter), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
+}
+
+.font-serif-lux {
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+}
+
+.font-serif-inst {
+  font-family: var(--font-instrument), 'Instrument Serif', serif;
 }
 
 /* Custom Scrollbar */
