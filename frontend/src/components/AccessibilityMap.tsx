@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { usePassport, PlaceFeatures } from '@/context/PassportContext';
@@ -8,6 +8,25 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Search, MapPin, Navigation, Compass, AlertTriangle, CheckCircle2 } from 'lucide-react';
+
+interface DbPlace {
+  id: number;
+  name: string;
+  category: string;
+  address: string;
+  lat: number;
+  lng: number;
+  has_ramp: boolean;
+  has_elevator: boolean;
+  has_handrail: boolean;
+  has_accessible_washroom: boolean;
+  has_nursing_room: boolean;
+  has_step_free_entrance: boolean;
+  stair_count: number;
+  has_seating: boolean;
+  has_parking: boolean;
+  is_verified: boolean;
+}
 
 export interface RouteDetails {
   name: string;
@@ -389,6 +408,11 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
   const [filteredLocations, setFilteredLocations] = useState<MapLocation[]>(MOCK_LOCATIONS);
   const [activeRouteTab, setActiveRouteTab] = useState<'shortest' | 'accessible'>('accessible');
 
+  const searchQueryRef = useRef(searchQuery);
+  useEffect(() => {
+    searchQueryRef.current = searchQuery;
+  }, [searchQuery]);
+
   useEffect(() => {
     async function loadPlaces() {
       try {
@@ -398,7 +422,7 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
           const dbPlaces = await res.json();
           // Merge database features with our mock locations images/routes
           const merged = MOCK_LOCATIONS.map(mock => {
-            const dbMatch = dbPlaces.find((p: any) => p.name.toLowerCase() === mock.name.toLowerCase());
+            const dbMatch = dbPlaces.find((p: DbPlace) => p.name.toLowerCase() === mock.name.toLowerCase());
             if (dbMatch) {
               return {
                 ...mock,
@@ -422,7 +446,7 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
           setLocations(merged);
           
           // Re-apply search filter or set all
-          const query = searchQuery.toLowerCase().trim();
+          const query = searchQueryRef.current.toLowerCase().trim();
           if (query === '') {
             setFilteredLocations(merged);
           } else {
@@ -520,7 +544,7 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
   const recommendation = selectedLoc ? getAIRouteRecommendation(selectedLoc) : null;
 
   return (
-    <Card className="w-full p-4 md:p-6 overflow-hidden bg-white/40 border border-white/60">
+    <Card className="w-full p-4 md:p-6 overflow-hidden premium-card">
       {/* Search Header Bar */}
       <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-6">
         <form onSubmit={handleSearch} className="relative w-full md:max-w-md">
@@ -529,7 +553,7 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
             placeholder="Search cafe, hospital, park, NYU..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-slate-200 bg-white/70 backdrop-blur-md text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-lavender/40 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 rounded-full border border-brand-maroon/20 bg-white text-sm font-semibold text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-maroon/40 transition-all"
           />
           <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
           <button type="submit" className="hidden">Search</button>
@@ -546,7 +570,7 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
                 setFilteredLocations(filtered);
                 if (filtered.length > 0) setSelectedLoc(filtered[0]);
               }}
-              className="px-3.5 py-1 text-xs font-extrabold rounded-full bg-white/80 border border-slate-200 text-slate-600 hover:bg-brand-lavender/10 hover:border-brand-lavender/30 transition-all cursor-pointer"
+              className="px-3.5 py-1 text-xs font-extrabold rounded-full bg-white border border-brand-maroon/10 text-brand-maroon hover:bg-brand-maroon hover:text-white transition-all cursor-pointer"
             >
               #{cat}s
             </button>
@@ -578,8 +602,8 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
                     onClick={() => setSelectedLoc(loc)}
                     className={`p-3.5 rounded-2xl border-2 transition-all duration-300 cursor-pointer flex gap-3.5 items-center ${
                       isSelected
-                        ? 'border-brand-lavender bg-white shadow-sm'
-                        : 'border-slate-200/60 bg-white/40 hover:bg-white/70'
+                        ? 'border-brand-maroon bg-white shadow-sm'
+                        : 'border-brand-maroon/5 bg-brand-cream/50 hover:bg-white hover:border-brand-maroon/20'
                     }`}
                   >
                     <img
@@ -607,15 +631,15 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h4 className="text-xs font-extrabold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                  <Compass size={14} className="text-brand-lavender" /> Route Options
+                  <Compass size={14} className="text-brand-maroon" /> Route Options
                 </h4>
                 
                 {/* Route Switcher Tab */}
-                <div className="flex bg-slate-100/80 p-0.5 rounded-full border border-slate-200/50">
+                <div className="flex bg-brand-cream p-0.5 rounded-full border border-brand-maroon/15">
                   <button
                     onClick={() => setActiveRouteTab('shortest')}
                     className={`px-3 py-1 text-[10px] font-extrabold rounded-full transition-all cursor-pointer ${
-                      activeRouteTab === 'shortest' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'
+                      activeRouteTab === 'shortest' ? 'bg-brand-maroon text-white shadow-sm' : 'text-brand-maroon/60'
                     }`}
                   >
                     Fastest
@@ -623,7 +647,7 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
                   <button
                     onClick={() => setActiveRouteTab('accessible')}
                     className={`px-3 py-1 text-[10px] font-extrabold rounded-full transition-all cursor-pointer ${
-                      activeRouteTab === 'accessible' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500'
+                      activeRouteTab === 'accessible' ? 'bg-brand-maroon text-white shadow-sm' : 'text-brand-maroon/60'
                     }`}
                   >
                     Safe Route
@@ -638,13 +662,13 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
                 const hasBarriers = route.stairCount > 0 || route.barriers.length > 0;
 
                 return (
-                  <div className="bg-white/60 border border-slate-200/50 rounded-2xl p-4 space-y-3.5">
+                  <div className="bg-white border border-brand-maroon/15 rounded-2xl p-4 space-y-3.5">
                     <div className="flex justify-between items-start">
                       <div>
                         <h5 className="text-sm font-extrabold text-slate-800 leading-tight">{route.name}</h5>
                         <p className="text-[10px] font-bold text-slate-500 mt-0.5">{route.distance} &bull; {route.time}</p>
                       </div>
-                      <Badge colorTheme={isShortest ? 'pink' : 'mint'} variant="glass" className="text-[9px]">
+                      <Badge colorTheme={isShortest ? 'maroon' : 'gold'} variant="glass" className="text-[9px]">
                         {route.steepness === 'flat' ? 'Flat Path' : `${route.steepness} slope`}
                       </Badge>
                     </div>
@@ -680,10 +704,10 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
               {recommendation && (
                 <div className={`p-4 rounded-2xl border flex gap-3 ${
                   recommendation.route === 'accessible'
-                    ? 'bg-emerald-50/70 border-emerald-200/60'
-                    : 'bg-slate-50 border-slate-200/60'
+                    ? 'bg-brand-cream border-brand-maroon/20 text-brand-maroon'
+                    : 'bg-white border-brand-maroon/10'
                 }`}>
-                  <CheckCircle2 size={16} className={`shrink-0 mt-0.5 ${recommendation.route === 'accessible' ? 'text-emerald-600' : 'text-slate-500'}`} />
+                  <CheckCircle2 size={16} className={`shrink-0 mt-0.5 ${recommendation.route === 'accessible' ? 'text-brand-maroon' : 'text-slate-500'}`} />
                   <div className="space-y-1">
                     <h6 className="text-[11px] font-black text-slate-800 uppercase tracking-wider">AI Routing Advice</h6>
                     <p className="text-[10px] text-slate-700 leading-relaxed font-semibold">
@@ -757,19 +781,18 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
             {/* Render Route Polylines when a location is active */}
             {selectedLoc && (
               <>
-                {/* Shortest Route (Route A): Dashed Pink */}
+                {/* Shortest Route (Route A): Solid Royal Maroon */}
                 <Polyline
                   positions={selectedLoc.routes.shortest.path}
-                  color="#FF6EC7"
-                  dashArray="6, 8"
-                  weight={activeRouteTab === 'shortest' ? 5 : 2}
+                  color="#5A1022"
+                  weight={activeRouteTab === 'shortest' ? 6 : 2.5}
                   opacity={activeRouteTab === 'shortest' ? 0.9 : 0.4}
                 />
                 
-                {/* Accessible Route (Route B): Solid Mint Green */}
+                {/* Accessible Route (Route B): Solid Gold */}
                 <Polyline
                   positions={selectedLoc.routes.accessible.path}
-                  color="#7EF2C6"
+                  color="#D4AF37"
                   weight={activeRouteTab === 'accessible' ? 6 : 2.5}
                   opacity={activeRouteTab === 'accessible' ? 0.95 : 0.45}
                 />
@@ -782,18 +805,18 @@ export const AccessibilityMap: React.FC<AccessibilityMapProps> = ({ refreshTrigg
 
           {/* Quick Info Box overlayed on the map */}
           {selectedLoc && (
-            <div className="absolute bottom-4 left-4 right-4 z-[999] bg-white/85 backdrop-blur-md p-4 rounded-2xl border border-white/60 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+            <div className="absolute bottom-4 left-4 right-4 z-[999] bg-brand-cream p-4 rounded-2xl border border-brand-maroon/25 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
               <div>
-                <span className="text-[10px] font-extrabold text-[#8C52FF] bg-[#8C52FF]/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-[10px] font-extrabold text-brand-maroon bg-brand-maroon/10 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   Active Place Profile
                 </span>
                 <h5 className="text-sm font-bold text-slate-800 mt-1 flex items-center gap-1.5">
-                  <MapPin className="text-brand-pink h-4 w-4" /> {selectedLoc.name}
+                  <MapPin className="text-brand-maroon h-4 w-4" /> {selectedLoc.name}
                 </h5>
               </div>
               <div className="flex gap-2 w-full md:w-auto">
                 <Button
-                  colorTheme="lavender"
+                  colorTheme="maroon"
                   size="sm"
                   onClick={() => alert(`Directions to ${selectedLoc.name} requested.`)}
                   className="flex-1 md:flex-none text-xs"

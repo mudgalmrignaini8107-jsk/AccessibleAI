@@ -6,7 +6,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { uploadToVisionAI, uploadPlaceVerification } from '@/utils/api';
-import { Upload, Eye, ShieldCheck, RefreshCw, AlertCircle } from 'lucide-react';
+import { Upload, Sparkles, ShieldCheck, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface VisionScannerProps {
@@ -98,10 +98,10 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
   };
 
   return (
-    <Card accent="mint" className="w-full p-6 bg-white/40 border border-white/60">
+    <Card accent="maroon" className="w-full p-6 premium-card">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         {/* Left Side: Upload Zone */}
-        <div className="relative flex flex-col justify-center items-center h-[340px] border-2 border-dashed border-slate-300/60 rounded-3xl bg-white/30 overflow-hidden group hover:border-brand-mint/60 transition-all duration-300">
+        <div className="relative flex flex-col justify-center items-center h-[340px] border-2 border-dashed border-brand-maroon/20 rounded-3xl bg-brand-cream/45 overflow-hidden group hover:border-brand-maroon/50 transition-all duration-300">
           
           <AnimatePresence mode="wait">
             {!imagePreview ? (
@@ -114,8 +114,8 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
                 className="text-center p-6 flex flex-col items-center cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
               >
-                <div className="w-16 h-16 rounded-full bg-brand-mint/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <Upload className="text-emerald-700 h-7 w-7" />
+                <div className="w-16 h-16 rounded-full bg-brand-maroon/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Upload className="text-brand-maroon h-7 w-7" />
                 </div>
                 <h4 className="text-sm font-bold text-slate-800 mb-1">Upload Street View Image</h4>
                 <p className="text-xs text-slate-500 max-w-xs font-semibold leading-relaxed">
@@ -139,7 +139,7 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
 
                 {/* Laser line scanning overlay */}
                 {isScanning && (
-                  <div className="absolute inset-x-0 h-1 bg-brand-mint shadow-[0_0_12px_#7EF2C6] z-10 animate-[scan_2s_ease-in-out_infinite]" style={{
+                  <div className="absolute inset-x-0 h-1 bg-brand-maroon shadow-[0_0_12px_#5A1022] z-10 animate-[scan_2s_ease-in-out_infinite]" style={{
                     animationName: 'scan'
                   }} />
                 )}
@@ -159,7 +159,7 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
                     {detections.map((det, idx) => (
                       <div
                         key={idx}
-                        className="absolute border-2 border-brand-mint shadow-md flex items-start"
+                        className="absolute border-2 border-brand-maroon shadow-md flex items-start"
                         style={{
                           left: `${det.box[0]}%`,
                           top: `${det.box[1]}%`,
@@ -167,7 +167,7 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
                           height: `${det.box[3]}%`,
                         }}
                       >
-                        <span className="bg-brand-mint text-[9px] font-black text-slate-800 px-1 py-0.5 rounded-br shadow-sm">
+                        <span className="bg-brand-maroon text-[9px] font-black text-white px-1 py-0.5 rounded-br shadow-sm">
                           {det.label} ({intToPct(det.confidence)})
                         </span>
                       </div>
@@ -190,7 +190,7 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
         {/* Right Side: Analysis Controls & Reports */}
         <div className="space-y-6">
           <div>
-            <Badge colorTheme="mint" className="mb-2">
+            <Badge colorTheme="maroon" className="mb-2">
               Geospatial Vision AI
             </Badge>
             <h3 className="text-2xl font-black text-slate-800 mb-1">
@@ -210,7 +210,7 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
               value={selectedPlaceId}
               onChange={(e) => setSelectedPlaceId(e.target.value)}
               disabled={isScanning}
-              className="w-full px-3.5 py-2.5 rounded-2xl border border-slate-200 bg-white/70 backdrop-blur-md text-xs font-bold text-slate-855 focus:outline-none focus:ring-2 focus:ring-brand-mint/40 transition-all cursor-pointer"
+              className="w-full px-3.5 py-2.5 rounded-2xl border border-brand-maroon/20 bg-white text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-maroon/40 transition-all cursor-pointer"
             >
               <option value="generic">📁 Generic Sandbox Auditor (Sandbox)</option>
               <option value="1">☕ Sweet Pastel Cafe (Verify & Sync)</option>
@@ -226,33 +226,25 @@ export const VisionScanner: React.FC<VisionScannerProps> = ({ onScanComplete }) 
           <div className="flex gap-3">
             {!imagePreview ? (
               <Button
-                colorTheme="mint"
+                colorTheme="maroon"
                 onClick={() => fileInputRef.current?.click()}
-                className="text-xs font-bold"
+                className="font-extrabold text-xs flex items-center gap-1.5 rounded-none"
               >
-                Choose Image
+                <Upload size={14} /> Upload Image
               </Button>
             ) : (
               <>
                 <Button
-                  colorTheme="mint"
+                  colorTheme="maroon"
                   onClick={executeScan}
                   disabled={isScanning}
-                  className="text-xs font-bold"
+                  className="font-extrabold text-xs flex items-center gap-1.5 rounded-none"
                 >
-                  {isScanning ? (
-                    <>
-                      <RefreshCw size={12} className="mr-1.5 animate-spin" /> Scanning...
-                    </>
-                  ) : (
-                    <>
-                      <Eye size={12} className="mr-1.5" /> Run AI Audit
-                    </>
-                  )}
+                  <Sparkles size={14} /> {isScanning ? 'Scanning...' : 'Analyze Facade'}
                 </Button>
                 <Button
                   variant="outline"
-                  colorTheme="mint"
+                  colorTheme="maroon"
                   onClick={resetScanner}
                   disabled={isScanning}
                   className="text-xs font-bold"

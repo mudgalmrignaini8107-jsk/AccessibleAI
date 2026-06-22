@@ -202,16 +202,16 @@ export const PassportProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     if (score >= 85) {
       grade = 'Fully Accessible';
-      textClass = 'text-emerald-700';
-      bgClass = 'bg-emerald-50 border-emerald-200';
+      textClass = 'text-brand-maroon font-black';
+      bgClass = 'bg-brand-light-gold border-brand-gold/30';
     } else if (score >= 60) {
       grade = 'Partially Accessible';
-      textClass = 'text-sky-700';
-      bgClass = 'bg-sky-50 border-sky-200';
+      textClass = 'text-brand-charcoal';
+      bgClass = 'bg-brand-cream border-brand-maroon/20';
     } else {
       grade = 'Inaccessible';
-      textClass = 'text-rose-600';
-      bgClass = 'bg-rose-50 border-rose-200';
+      textClass = 'text-brand-maroon font-bold';
+      bgClass = 'bg-[#FFFDF9] border-brand-maroon/30';
     }
 
     return { score, grade, textClass, bgClass };

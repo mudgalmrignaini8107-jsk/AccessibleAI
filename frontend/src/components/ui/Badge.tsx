@@ -5,7 +5,7 @@ import { cn } from '@/utils/cn';
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: 'solid' | 'outline' | 'glass';
-  colorTheme?: 'pink' | 'lavender' | 'sky' | 'mint' | 'peach';
+  colorTheme?: 'pink' | 'lavender' | 'sky' | 'mint' | 'peach' | 'maroon' | 'gold';
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
@@ -36,6 +36,16 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
         solid: 'bg-sec-peach text-amber-950',
         outline: 'border border-sec-peach text-amber-950',
         glass: 'bg-sec-peach/15 text-amber-900 border border-sec-peach/25',
+      },
+      maroon: {
+        solid: 'bg-brand-maroon text-white',
+        outline: 'border border-brand-maroon text-brand-maroon',
+        glass: 'bg-brand-maroon/10 text-brand-maroon border border-brand-maroon/20',
+      },
+      gold: {
+        solid: 'bg-brand-gold text-brand-charcoal',
+        outline: 'border border-brand-gold text-[#B08A1A]',
+        glass: 'bg-brand-gold/15 text-[#B08A1A] border border-brand-gold/25',
       },
     };
 

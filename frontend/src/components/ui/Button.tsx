@@ -5,7 +5,7 @@ import { cn } from '@/utils/cn';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'glass' | 'ghost';
-  colorTheme?: 'pink' | 'lavender' | 'sky' | 'mint' | 'peach';
+  colorTheme?: 'pink' | 'lavender' | 'sky' | 'mint' | 'peach' | 'maroon' | 'gold';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
 }
@@ -38,6 +38,16 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         bg: 'bg-sec-peach text-amber-950 hover:bg-[#ffd194] active:bg-[#ebb573] focus:ring-sec-peach/30 shadow-[0_4px_14px_0_rgba(255,214,165,0.35)] hover:shadow-[0_6px_20px_0_rgba(255,214,165,0.5)]',
         outline: 'border-2 border-sec-peach text-amber-900 hover:bg-sec-peach/10 focus:ring-sec-peach/20',
         glass: 'bg-sec-peach/20 text-amber-950 border border-sec-peach/30 hover:bg-sec-peach/30 active:bg-sec-peach/40',
+      },
+      maroon: {
+        bg: 'bg-brand-maroon text-white hover:bg-[#7a1831] active:bg-[#440c19] focus:ring-brand-maroon/30 shadow-[0_4px_14px_0_rgba(90,16,34,0.35)] hover:shadow-[0_6px_20px_0_rgba(90,16,34,0.5)]',
+        outline: 'border-2 border-brand-maroon text-brand-maroon hover:bg-brand-maroon/10 focus:ring-brand-maroon/20',
+        glass: 'bg-brand-maroon/20 text-brand-maroon border border-brand-maroon/30 hover:bg-brand-maroon/30 active:bg-brand-maroon/40',
+      },
+      gold: {
+        bg: 'bg-brand-gold text-brand-charcoal hover:bg-[#e6c148] active:bg-[#c09d2c] focus:ring-brand-gold/30 shadow-[0_4px_14px_0_rgba(212,175,55,0.35)] hover:shadow-[0_6px_20px_0_rgba(212,175,55,0.5)]',
+        outline: 'border-2 border-brand-gold text-[#B08A1A] hover:bg-brand-gold/10 focus:ring-brand-gold/20',
+        glass: 'bg-brand-gold/20 text-brand-charcoal border border-brand-gold/30 hover:bg-brand-gold/30 active:bg-brand-gold/40',
       },
     };
 

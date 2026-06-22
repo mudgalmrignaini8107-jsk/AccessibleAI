@@ -5,7 +5,7 @@ import { cn } from '@/utils/cn';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverEffect?: boolean;
-  accent?: 'pink' | 'lavender' | 'sky' | 'mint' | 'peach' | 'none';
+  accent?: 'pink' | 'lavender' | 'sky' | 'mint' | 'peach' | 'maroon' | 'gold' | 'none';
   padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
@@ -18,6 +18,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       sky: 'before:bg-brand-sky',
       mint: 'before:bg-brand-mint',
       peach: 'before:bg-sec-peach',
+      maroon: 'before:bg-brand-maroon',
+      gold: 'before:bg-brand-gold',
       none: '',
     };
 
@@ -32,8 +34,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          'glass-panel relative overflow-hidden transition-all duration-300',
-          hoverEffect ? 'glass-panel-hover' : '',
+          'premium-card relative overflow-hidden transition-all duration-300',
+          hoverEffect ? 'premium-card-hover' : '',
           accent !== 'none' ? 'before:content-[""] before:absolute before:top-0 before:left-0 before:right-0 before:h-1.5' : '',
           accentColors[accent],
           paddings[padding],

@@ -29,7 +29,7 @@ const instrument = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
-  title: "Accessible AI 🌈 | AI-Powered Accessibility Mapping",
+  title: "Accessible AI | AI-Powered Urban Accessibility Platform",
   description: "Discover public place accessibility before you arrive. Using Computer Vision & Geospatial Intelligence, we map cafes, hospitals, and parks for wheelchair users, senior citizens, parents, and temporary injuries.",
   keywords: ["accessibility", "AI", "computer vision", "wheelchair access", "stroller accessibility", "safe routes", "accessible mapping", "inclusive cities"],
   authors: [{ name: "Accessible AI Team" }],
@@ -43,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${outfit.variable} ${inter.variable} ${playfair.variable} ${instrument.variable} antialiased min-h-screen text-slate-800`}
+        className={`${outfit.variable} ${inter.variable} ${playfair.variable} ${instrument.variable} antialiased min-h-screen bg-brand-ivory text-brand-charcoal`}
       >
         <PassportProvider>
           <SmoothScrollProvider>

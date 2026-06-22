@@ -53,8 +53,8 @@ export const PassportSelector: React.FC = () => {
                 onClick={() => setProfile(profile.id)}
                 className={`cursor-pointer rounded-3xl transition-all duration-300 relative border-2 ${
                   isActive 
-                    ? 'border-brand-lavender bg-white/70 shadow-md ring-2 ring-brand-lavender/10'
-                    : 'border-slate-200 bg-white/35 hover:bg-white/55 hover:border-slate-300'
+                    ? 'border-brand-maroon bg-white shadow-md ring-2 ring-brand-maroon/5'
+                    : 'border-brand-maroon/10 bg-brand-cream/50 hover:bg-white hover:border-brand-maroon/25'
                 }`}
               >
                 <div className="p-5 flex flex-col justify-between h-full">
@@ -63,11 +63,11 @@ export const PassportSelector: React.FC = () => {
                       {profile.emoji}
                     </span>
                     {isActive ? (
-                      <Badge colorTheme="lavender" variant="solid" className="px-2.5 py-0.5">
+                      <Badge colorTheme="maroon" variant="solid" className="px-2.5 py-0.5">
                         <Check size={11} className="mr-0.5" /> Active
                       </Badge>
                     ) : (
-                      <Badge colorTheme="sky" variant="glass" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Badge colorTheme="gold" variant="glass" className="opacity-0 group-hover:opacity-100 transition-opacity">
                         Select
                       </Badge>
                     )}
@@ -99,7 +99,7 @@ export const PassportSelector: React.FC = () => {
           <div className="flex justify-start">
             <Button
               variant="ghost"
-              colorTheme="lavender"
+              colorTheme="maroon"
               size="sm"
               onClick={() => setProfile('none')}
               className="text-xs font-bold"
@@ -111,9 +111,9 @@ export const PassportSelector: React.FC = () => {
       </div>
 
       {/* Right side: Recalculation Simulator Card */}
-      <Card accent="lavender" className="w-full flex flex-col justify-between">
+      <Card accent="maroon" className="w-full flex flex-col justify-between premium-card">
         <div>
-          <Badge colorTheme="lavender" className="mb-3">
+          <Badge colorTheme="maroon" className="mb-3">
             Recalculation Simulator
           </Badge>
           <h4 className="text-lg font-black text-slate-800 mb-1">
@@ -125,11 +125,11 @@ export const PassportSelector: React.FC = () => {
 
           {/* Place Stats Details */}
           <div className="space-y-4 mb-8">
-            <div className="flex justify-between items-center pb-2.5 border-b border-slate-200/50">
+            <div className="flex justify-between items-center pb-2.5 border-b border-brand-maroon/10">
               <span className="text-xs font-bold text-slate-600 flex items-center gap-1.5">
                 📍 Location
               </span>
-              <span className="text-xs font-extrabold text-slate-800">Sweet Pastel Cafe</span>
+              <span className="text-xs font-extrabold text-slate-850">Sweet Pastel Cafe</span>
             </div>
             
             <div className="space-y-1.5">
